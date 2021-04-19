@@ -286,7 +286,7 @@ public final class LoginActivity extends AppCompatActivity {
 
         mAuthService.performRegistrationRequest(
                 registrationRequest,
-                this::handleRegistrationResponse);
+                this::handleRegistrationResponse, "");
     }
 
     @MainThread
