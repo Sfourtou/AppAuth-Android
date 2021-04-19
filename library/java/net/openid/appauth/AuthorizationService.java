@@ -489,20 +489,20 @@ public class AuthorizationService {
      * Sends a request to the authorization service to dynamically register a client.
      * The result of this request will be sent to the provided callback handler.
      */
-    public void performRegistrationRequest(
+     public void performRegistrationRequest(
         @NonNull RegistrationRequest request,
         @NonNull RegistrationResponseCallback callback,
         @NonNull String initialAccessToken) {
-        checkNotDisposed();
-        Logger.debug("Initiating dynamic client registration %s",
-            request.configuration.registrationEndpoint.toString());
-        new RegistrationRequestTask(
-            request,
-            mClientConfiguration.getConnectionBuilder(),
-            initialAccessToken,
-            callback)
-            .execute();
-    }
+         checkNotDisposed();
+         Logger.debug("Initiating dynamic client registration %s",
+             request.configuration.registrationEndpoint.toString());
+         new RegistrationRequestTask(
+             request,
+             mClientConfiguration.getConnectionBuilder(),
+             initialAccessToken,
+             callback)
+             .execute();
+     }
 
     /**
      * Disposes state that will not normally be handled by garbage collection. This should be
