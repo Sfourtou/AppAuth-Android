@@ -501,13 +501,15 @@ public class AuthorizationService {
      */
     public void performRegistrationRequest(
             @NonNull RegistrationRequest request,
-            @NonNull RegistrationResponseCallback callback) {
+            @NonNull RegistrationResponseCallback callback,
+            @NonNull String initialAccessToken) {
         checkNotDisposed();
         Logger.debug("Initiating dynamic client registration %s",
                 request.configuration.registrationEndpoint.toString());
         new RegistrationRequestTask(
                 request,
                 mClientConfiguration.getConnectionBuilder(),
+                initialAccessToken,
                 callback)
                 .execute();
     }
@@ -751,15 +753,19 @@ public class AuthorizationService {
         private RegistrationRequest mRequest;
         private final ConnectionBuilder mConnectionBuilder;
         private RegistrationResponseCallback mCallback;
+        @Nullable private String  mInitialAccessToken;
 
         private AuthorizationException mException;
 
         RegistrationRequestTask(RegistrationRequest request,
                 ConnectionBuilder connectionBuilder,
+                @Nullable String initialAccessToken,
                 RegistrationResponseCallback callback) {
             mRequest = request;
             mConnectionBuilder = connectionBuilder;
+            mInitialAccessToken = initialAccessToken;
             mCallback = callback;
+
         }
 
         @Override
@@ -773,6 +779,9 @@ public class AuthorizationService {
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setDoOutput(true);
                 conn.setRequestProperty("Content-Length", String.valueOf(postData.length()));
+                if (mInitialAccessToken != null) {
+                    conn.setRequestProperty("Authorization", "Bearer " + mInitialAccessToken);
+                }
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
                 wr.write(postData);
                 wr.flush();
